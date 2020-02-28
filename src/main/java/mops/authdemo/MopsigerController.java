@@ -13,12 +13,13 @@ import javax.annotation.security.RolesAllowed;
 public class MopsigerController {
 
     @GetMapping("/")
-    public String overview(Model model) {
-        return "overview";
+    public String index() {
+        return "index";
     }
 
-    @GetMapping("/some_explicit_route")
-    public String customers(KeycloakAuthenticationToken token, Model model) {
+    // Rollenberechtigung eingerichtet in SecurityConfig
+    @GetMapping("/my-route")
+    public String myRoute(KeycloakAuthenticationToken token, Model model) {
         KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
         model.addAttribute("username", principal.getName());
         model.addAttribute("email", principal.getKeycloakSecurityContext().getIdToken().getEmail());
@@ -77,15 +78,12 @@ public class MopsigerController {
         model.addAttribute("email", principal.getKeycloakSecurityContext().getIdToken().getEmail());
 
         Entry[] entries = new Entry[]{
-                new Entry("username", principal.getName(), "principal.getName()"),
-                new Entry("your roles", String.join(",", token.getAccount().getRoles()), "token.getAccount().getRoles()"),
-                new Entry("email address", principal.getKeycloakSecurityContext().getIdToken().getEmail(), "principal.getKeycloakSecurityContext().getIdToken().getEmail()"),
-                new Entry("matrikelnummer", "???", "???")};
+            new Entry("username", principal.getName(), "principal.getName()"),
+            new Entry("your roles", String.join(",", token.getAccount().getRoles()), "token.getAccount().getRoles()"),
+            new Entry("email address", principal.getKeycloakSecurityContext().getIdToken().getEmail(), "principal.getKeycloakSecurityContext().getIdToken().getEmail()"),
+            new Entry("matrikelnummer", "???", "???")};
 
         model.addAttribute("entries", entries);
-
         return "personal";
     }
-
-
 }
