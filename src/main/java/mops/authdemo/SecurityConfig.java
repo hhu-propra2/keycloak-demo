@@ -64,7 +64,7 @@ class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
     }
 
     /**
-     * Decalring this class enables us to use the Spring specific
+     * Declaring this class enables us to use the Spring specific
      * {@link org.springframework.security.access.annotation.Secured} annotation
      * or the JSR-250 Java Standard
      * {@link javax.annotation.security.RolesAllowed} annotation
