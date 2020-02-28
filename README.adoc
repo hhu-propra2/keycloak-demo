@@ -32,7 +32,7 @@ Die Applikation kann einfach über den mitgelieferten Gradle Wrapper gestartet w
 
 == Nutzung
 
-Öffnen Sie die nicht zugangsbeschränkte Startseite http://localhost:8080. Von hier aus können sie die verschiedenen Routen anklicken. Sie müssen sich anschließend über Keycloak einloggen um Zugang zu erhalten. 
+Öffnen Sie die nicht zugangsbeschränkte Startseite http://localhost:8080. Von hier aus können Sie die verschiedenen Routen anklicken. Sie müssen sich anschließend über Keycloak einloggen um Zugang zu erhalten. 
 
 Die verfügbaren Routen sind:
 
@@ -63,7 +63,7 @@ Damit Spring-Boot diese Konfiguration auch findet, müssen wir eine weitere `@Be
 
 WARNING: Aufgrund eines Bugs in dem Keycloak Adapter können wir diese Methode leider nicht in der `SecurityConfig` Klasse deklarieren.
 
-TIP: Erstellen sie eine seperate Klasse, welche mit `org.springframework.context.annotation.Configuration` annotiert ist und deklarieren sie die Bean-Methode dort. In der Demo wird dies in der `KeycloakConfig` umgesetzt.
+TIP: Erstellen Sie eine seperate Klasse, welche mit `org.springframework.context.annotation.Configuration` annotiert ist und deklarieren Sie die Bean-Methode dort. In der Demo wird dies in der `KeycloakConfig` umgesetzt.
 
 [source,java]
 ----
@@ -80,7 +80,7 @@ IMPORTANT: Sollten Sie einen Fehler erhalten, in welcher von Spring Boot keine `
 
 Um in Spring Security mit Keycloak Access-Token per `@Autowire` injecten zu können, kann eine weitere `@Bean`-annotierte Methode in der `SecurityConfig` Klasse deklariert werden.
 
-TIP: Sehen sie sich hierzu die `@Bean`-annotierte Methode `getAccessToken` an.
+TIP: Sehen Sie sich hierzu die `@Bean`-annotierte Methode `getAccessToken` an.
 
 === Rollenbasierter Zugang
 Um Rollenbasierten Zugang mit Spring Security umzusetzen, bieten sich zwei Möglichkeiten an.
