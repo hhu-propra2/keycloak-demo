@@ -8,12 +8,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class MopsigerController {
 
     @GetMapping("/")
-    public String index() {
+    public String index(KeycloakAuthenticationToken token, Model model) {
+        if (token != null) {
+            KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
+            model.addAttribute("username", principal.getName());
+        }
         return "index";
     }
 
@@ -78,12 +83,18 @@ public class MopsigerController {
         model.addAttribute("email", principal.getKeycloakSecurityContext().getIdToken().getEmail());
 
         Entry[] entries = new Entry[]{
-            new Entry("username", principal.getName(), "principal.getName()"),
-            new Entry("your roles", String.join(",", token.getAccount().getRoles()), "token.getAccount().getRoles()"),
-            new Entry("email address", principal.getKeycloakSecurityContext().getIdToken().getEmail(), "principal.getKeycloakSecurityContext().getIdToken().getEmail()"),
-            new Entry("matrikelnummer", "???", "???")};
+                new Entry("username", principal.getName(), "principal.getName()"),
+                new Entry("your roles", String.join(",", token.getAccount().getRoles()), "token.getAccount().getRoles()"),
+                new Entry("email address", principal.getKeycloakSecurityContext().getIdToken().getEmail(), "principal.getKeycloakSecurityContext().getIdToken().getEmail()"),
+                new Entry("matrikelnummer", "???", "???")};
 
         model.addAttribute("entries", entries);
         return "personal";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) throws Exception {
+        request.logout();
+        return "redirect:/";
     }
 }
