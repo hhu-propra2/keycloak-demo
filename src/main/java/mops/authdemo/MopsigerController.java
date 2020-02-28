@@ -8,17 +8,23 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class MopsigerController {
 
     @GetMapping("/")
-    public String overview(Model model) {
-        return "overview";
+    public String index(KeycloakAuthenticationToken token, Model model) {
+        if (token != null) {
+            KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
+            model.addAttribute("username", principal.getName());
+        }
+        return "index";
     }
 
-    @GetMapping("/some_explicit_route")
-    public String customers(KeycloakAuthenticationToken token, Model model) {
+    // Rollenberechtigung eingerichtet in SecurityConfig
+    @GetMapping("/my-route")
+    public String myRoute(KeycloakAuthenticationToken token, Model model) {
         KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
         model.addAttribute("username", principal.getName());
         model.addAttribute("email", principal.getKeycloakSecurityContext().getIdToken().getEmail());
@@ -83,9 +89,12 @@ public class MopsigerController {
                 new Entry("matrikelnummer", "???", "???")};
 
         model.addAttribute("entries", entries);
-
         return "personal";
     }
 
-
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) throws Exception {
+        request.logout();
+        return "redirect:/";
+    }
 }

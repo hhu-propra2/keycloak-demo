@@ -1,37 +1,41 @@
 <!doctype html>
 <html lang="en" th:fragment="layout(title, content)" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 
-    <!-- Bootstrap CSS -->
-    <link href="../static/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"
-          th:href="@{node_modules/bootstrap/dist/css/bootstrap.min.css}">
+  <!-- Bootstrap CSS -->
+  <link href="../static/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"
+        th:href="@{node_modules/bootstrap/dist/css/bootstrap.min.css}">
 
-    <title th:include="${title}">Bloggy</title>
+  <title th:include="${title}">Bloggy</title>
 </head>
 
 <body>
 <nav class="navbar navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">MOPS</a>
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">MOPS</a>
 
-        <div class="lead border navbar-text ml-auto" style="font-weight:bold;">Welcome
-            <span th:text="${role}"> Role </span>
-            <span style="font-style: italic" th:text="${username}"> User </span>
-        </div>
-    </div>
+    <a class="btn lead border navbar-text ml-auto mr-2" th:href="@{/logout}" th:if="${username}">
+      Logout
+    </a>
+    <a class="btn lead border navbar-text" th:href="@{/personal}">
+      Welcome
+      <span th:text="${role}"> Role </span>
+      <span style="font-style: italic" th:text="${username}"> User </span>
+    </a>
+  </div>
 
 </nav>
 
 <div class="container pt-3">
-    <h1 th:replace="${title}">
-        Title goes here
-    </h1>
-    <div th:replace="${content}">
-        Content goes here
-    </div>
+  <h1 th:replace="${title}">
+    Title goes here
+  </h1>
+  <div th:replace="${content}">
+    Content goes here
+  </div>
 </div>
 </body>
 </html>
