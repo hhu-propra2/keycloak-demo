@@ -15,7 +15,7 @@
 <body>
 <nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">MOPS</a>
+    <a class="navbar-brand" th:href="@{/}">MOPS</a>
 
     <a class="btn lead border navbar-text ml-auto mr-2" th:href="@{/logout}" th:if="${username}">
       Logout
