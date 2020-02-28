@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.annotation.security.RolesAllowed;
+
 @Controller
 public class MopsigerController {
 
@@ -14,6 +16,7 @@ public class MopsigerController {
     public String overview(Model model) {
         return "overview";
     }
+
     @GetMapping("/some_explicit_route")
     public String customers(KeycloakAuthenticationToken token, Model model) {
         KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
@@ -45,7 +48,7 @@ public class MopsigerController {
     }
 
     @GetMapping("/korrektorin")
-    @Secured("ROLE_korrektorin")
+    @RolesAllowed("ROLE_korrektorin")
     public String korrektorin(KeycloakAuthenticationToken token, Model model) {
         KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
         model.addAttribute("username", principal.getName());
@@ -66,7 +69,7 @@ public class MopsigerController {
     }
 
     @GetMapping("/personal")
-    @Secured({"ROLE_korrektorin", "ROLE_orga", "ROLE_studentin"})
+    @RolesAllowed({"ROLE_korrektorin", "ROLE_orga", "ROLE_studentin"})
     public String personal(KeycloakAuthenticationToken token, Model model) {
         KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
         model.addAttribute("username", principal.getName());
@@ -75,9 +78,9 @@ public class MopsigerController {
 
         Entry[] entries = new Entry[]{
                 new Entry("username", principal.getName(), "principal.getName()"),
-                new Entry("your roles",String.join(",", token.getAccount().getRoles()), "token.getAccount().getRoles()"),
+                new Entry("your roles", String.join(",", token.getAccount().getRoles()), "token.getAccount().getRoles()"),
                 new Entry("email address", principal.getKeycloakSecurityContext().getIdToken().getEmail(), "principal.getKeycloakSecurityContext().getIdToken().getEmail()"),
-                new Entry("matrikelnummer", "???","???")};
+                new Entry("matrikelnummer", "???", "???")};
 
         model.addAttribute("entries", entries);
 
