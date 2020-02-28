@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class MopsigerController {
+
+    @GetMapping("/")
+    public String overview(Model model) {
+        return "overview";
+    }
     @GetMapping("/some_explicit_route")
     public String customers(KeycloakAuthenticationToken token, Model model) {
         KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();

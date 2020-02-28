@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{base :: layout(~{::title}, ~{::#content})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Overview</title>
+</head>
+<body>
+<div id="content">
+    <h1 class="text-center">
+        Spring Boot Keycloak Demo
+    </h1>
+
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Beschreibung</th>
+                <th>Link</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    Explizit über Ant-Matcher freigegebene Route.
+                </td>
+                <td>
+                    <a href="/some_explicit_route">Explicit Route</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Route exklusiv für User mit der Rolle "orga"
+                </td>
+                <td>
+                    <a href="/orga">Orga Route</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Route exklusiv für User mit der Rolle "studentin"
+                </td>
+                <td>
+                    <a href="/studi">StudentIn Route</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Route exklusiv für User mit der Rolle "korrektorin"
+                </td>
+                <td>
+                    <a href="/korrektorin">KorrektorIn Route</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Route exklusiv für User mit der Rolle "korrektorin" <i>oder</i> der Rolle "orga"
+                </td>
+                <td>
+                    <a href="/mixed">Gemischte Route</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Route für User mit einer der angegeben Rollen. Hier sieht man persönliche Infos.
+                </td>
+                <td>
+                    <a href="/personal">Persönliche Infos</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
