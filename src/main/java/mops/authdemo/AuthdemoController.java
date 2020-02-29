@@ -22,16 +22,6 @@ public class AuthdemoController {
         return "index";
     }
 
-    // Rollenberechtigung eingerichtet in SecurityConfig
-    @GetMapping("/my-route")
-    public String myRoute(KeycloakAuthenticationToken token, Model model) {
-        KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
-        model.addAttribute("username", principal.getName());
-        model.addAttribute("email", principal.getKeycloakSecurityContext().getIdToken().getEmail());
-        model.addAttribute("entries", Entry.generate(10));
-        return "orga";
-    }
-
     @GetMapping("/orga")
     @Secured("ROLE_orga")
     public String orga(KeycloakAuthenticationToken token, Model model) {
@@ -52,7 +42,6 @@ public class AuthdemoController {
         model.addAttribute("entries", Entry.generate(10));
         return "studentin";
     }
-
 
 
     @GetMapping("/personal")
