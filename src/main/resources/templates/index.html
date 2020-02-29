@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" th:replace="~{base :: layout(~{::title}, ~{::#content})}"
+<html data-layout-decorate="~{layout}" lang="en"
       xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Overview</title>
 </head>
 <body>
-<div id="content">
+<header>
+  <ul data-layout-fragment="navigation">
+    <!-- Listenelemente mit einfachen Links hier einfügen! -->
+  </ul>
+</header>
+<main data-layout-fragment="content" id="content">
   <h1 class="text-center">
     Spring Boot Keycloak Demo
   </h1>
@@ -53,6 +58,6 @@
       </tbody>
     </table>
   </div>
-</div>
+</main>
 </body>
 </html>
