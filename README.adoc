@@ -145,7 +145,7 @@ Die Demo nutzt beides.
 [source,java]
 ----
 @GetMapping("/personal")
-@RolesAllowed({"ROLE_korrektorin", "ROLE_orga", "ROLE_studentin"})
+@RolesAllowed({"ROLE_orga", "ROLE_studentin"})
 public String personal
 ----
 

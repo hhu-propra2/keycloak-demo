@@ -12,12 +12,25 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class AuthdemoController {
+    /**
+     * Nimmt das Authentifizierungstoken von Keycloak und erzeugt ein AccountDTO für die Views.
+     *
+     * @param token
+     * @return neuen Account der im Template verwendet wird
+     */
+    private Account createAccountFromPrincipal(KeycloakAuthenticationToken token) {
+        KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
+        return new Account(
+                principal.getName(),
+                principal.getKeycloakSecurityContext().getIdToken().getEmail(),
+                null,
+                token.getAccount().getRoles());
+    }
 
     @GetMapping("/")
     public String index(KeycloakAuthenticationToken token, Model model) {
         if (token != null) {
-            KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
-            model.addAttribute("username", principal.getName());
+            model.addAttribute("account", createAccountFromPrincipal(token));
         }
         return "index";
     }
@@ -25,10 +38,7 @@ public class AuthdemoController {
     @GetMapping("/orga")
     @Secured("ROLE_orga")
     public String orga(KeycloakAuthenticationToken token, Model model) {
-        KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
-        model.addAttribute("username", principal.getName());
-        model.addAttribute("role", "OrganisatorIn");
-        model.addAttribute("email", principal.getKeycloakSecurityContext().getIdToken().getEmail());
+        model.addAttribute("account", createAccountFromPrincipal(token));
         model.addAttribute("entries", Entry.generate(10));
         return "orga";
     }
@@ -36,29 +46,16 @@ public class AuthdemoController {
     @GetMapping("/studi")
     @Secured("ROLE_studentin")
     public String studentin(KeycloakAuthenticationToken token, Model model) {
-        KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
-        model.addAttribute("username", principal.getName());
-        model.addAttribute("email", principal.getKeycloakSecurityContext().getIdToken().getEmail());
+        model.addAttribute("account", createAccountFromPrincipal(token));
         model.addAttribute("entries", Entry.generate(10));
         return "studentin";
     }
 
 
     @GetMapping("/personal")
-    @RolesAllowed({"ROLE_korrektorin", "ROLE_orga", "ROLE_studentin"})
+    @RolesAllowed({"ROLE_orga", "ROLE_studentin"})
     public String personal(KeycloakAuthenticationToken token, Model model) {
-        KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
-        model.addAttribute("username", principal.getName());
-        model.addAttribute("role", token.getAccount().getRoles().iterator().next());
-        model.addAttribute("email", principal.getKeycloakSecurityContext().getIdToken().getEmail());
-
-        Entry[] entries = new Entry[]{
-                new Entry("username", principal.getName(), "principal.getName()"),
-                new Entry("your roles", String.join(",", token.getAccount().getRoles()), "token.getAccount().getRoles()"),
-                new Entry("email address", principal.getKeycloakSecurityContext().getIdToken().getEmail(), "principal.getKeycloakSecurityContext().getIdToken().getEmail()"),
-                new Entry("matrikelnummer", "???", "???")};
-
-        model.addAttribute("entries", entries);
+        model.addAttribute("account", createAccountFromPrincipal(token));
         return "personal";
     }
 
