@@ -11,7 +11,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class MopsigerController {
+public class AuthdemoController {
 
     @GetMapping("/")
     public String index(KeycloakAuthenticationToken token, Model model) {
@@ -53,26 +53,7 @@ public class MopsigerController {
         return "studentin";
     }
 
-    @GetMapping("/korrektorin")
-    @RolesAllowed("ROLE_korrektorin")
-    public String korrektorin(KeycloakAuthenticationToken token, Model model) {
-        KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
-        model.addAttribute("username", principal.getName());
-        model.addAttribute("email", principal.getKeycloakSecurityContext().getIdToken().getEmail());
-        model.addAttribute("entries", Entry.generate(10));
-        return "korrektorin";
-    }
 
-    @GetMapping("/mixed")
-    @Secured({"ROLE_korrektorin", "ROLE_orga"})
-    public String korrektorin_and_orga(KeycloakAuthenticationToken token, Model model) {
-        KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
-        model.addAttribute("username", principal.getName());
-        model.addAttribute("role", "OrganisatorIn / KorrektorIn");
-        model.addAttribute("email", principal.getKeycloakSecurityContext().getIdToken().getEmail());
-        model.addAttribute("entries", Entry.generate(10));
-        return "mixed";
-    }
 
     @GetMapping("/personal")
     @RolesAllowed({"ROLE_korrektorin", "ROLE_orga", "ROLE_studentin"})

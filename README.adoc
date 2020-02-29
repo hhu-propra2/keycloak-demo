@@ -37,10 +37,8 @@ Sie müssen sich anschließend über Keycloak einloggen um Zugang zu erhalten.
 Die verfügbaren Routen sind:
 
 * `/orga` Zugangsbeschränkte Ansicht für OrganisatorInnen
-* `/my-route` Wie Orga, aber im Quelltext anders gesichert.
+* `/actuator` Zugangsbeschränkte Route für Monitoring Informationen
 * `/studi` Zugangsbeschränkte Ansicht für StudentInnen
-* `/korrektorin` Zugangsbeschränkte Ansicht für KorrektorInnen
-* `/mixed` Zugangsbeschränkte Ansicht für OrganisatorInnen und KorrektorInnen
 * `/personal` Zugangsbeschränkte Ansicht für alle oben erwähnten Rollen
 
 == Funktionsweise & Implementierung
@@ -166,9 +164,9 @@ So können wir auch zum Beispiel die Email-Adresse des über Keycloak eingeloggt
 
 [source,java]
 ----
-@GetMapping("/korrektorin")
-@RolesAllowed("ROLE_korrektorin")
-public String korrektorin(KeycloakAuthenticationToken token, Model model) {
+@GetMapping("/orga")
+@RolesAllowed("ROLE_orgs")
+public String orga(KeycloakAuthenticationToken token, Model model) {
     KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
     model.addAttribute("username", principal.getName());
     model.addAttribute("email", principal.getKeycloakSecurityContext().getIdToken().getEmail());
