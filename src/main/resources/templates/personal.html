@@ -23,37 +23,40 @@
     Have a look at the source code to find out how this info is retrieved :)
   </p>
 
-  <div id="links" th:if="${entries}">
-    <table class="table">
-      <thead>
-      <tr>
-        <th>Attribute</th>
-        <th>Value</th>
-        <th>one-liner</th>
-      </tr>
-      </thead>
-      <tbody th:remove="all-but-first">
-      <tr th:each="entry : ${entries}" th:object="${entry}">
-        <td>
-          <span th:text="*{attribute1}">
-            hhu
-          </span>
-        </td>
-        <td>
-          <span th:text="*{attribute2}">
-            https://hhu.de
-          </span>
-        </td>
-
-        <td>
-          <span th:text="*{attribute3}">
-            get().email().plz()
-          </span>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Attribute</th>
+      <th>Value</th>
+    </tr>
+    </thead>
+    <tbody th:object="${account}">
+    <tr>
+      <td>
+        Name
+      </td>
+      <td th:text="*{name}">
+        Heinrich Heine
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Roles
+      </td>
+      <td th:text="*{roles}">
+        [bürger]
+      </td>
+    </tr>
+    <tr>
+      <td>
+        E-Mail
+      </td>
+      <td th:text="*{email}">
+        heinrich@heine.mail
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>
 </body>
 </html>
