@@ -18,11 +18,11 @@ public class Entry {
 
     public static List<Entry> generate(int n) {
         final Faker faker = new Faker(Locale.GERMAN);
-        return IntStream.range(0, 15).mapToObj(value -> {
-                    return new Entry (faker.shakespeare().romeoAndJulietQuote(),
-                                      faker.shakespeare().asYouLikeItQuote(),
-                                      faker.shakespeare().hamletQuote());
-                }
+        return IntStream.range(0, 15).mapToObj(
+                value -> new Entry(
+                        faker.shakespeare().romeoAndJulietQuote(),
+                        faker.shakespeare().asYouLikeItQuote(),
+                        faker.shakespeare().hamletQuote())
         ).collect(Collectors.toList());
     }
 }
