@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html data-layout-decorate="~{layout}" lang="en"
+<html lang="en" layout:decorate="~{base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Overview</title>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+  <title>Index</title>
 </head>
 <body>
-<header>
-  <ul data-layout-fragment="navigation">
-    <!-- Listenelemente mit einfachen Links hier einfügen! -->
-  </ul>
-</header>
-<main data-layout-fragment="content" id="content">
+
+<div id="content" layout:fragment="content">
   <h1 class="text-center">
     Spring Boot Keycloak Demo
   </h1>
@@ -58,6 +57,6 @@
       </tbody>
     </table>
   </div>
-</main>
+</div>
 </body>
 </html>
