@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{base}"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base :: html(content=~{:: mycontent})}">
+
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
   <title>Index</title>
 </head>
-<body>
 
-<div id="content" layout:fragment="content">
+<body>
+<div id="content" th:fragment="mycontent">
   <h1 class="text-center">
     Spring Boot Keycloak Demo
   </h1>

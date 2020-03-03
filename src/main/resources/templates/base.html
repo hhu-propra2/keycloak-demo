@@ -1,27 +1,52 @@
 <!doctype html>
-<html lang="en" layout:decorate="~{layout}"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{mopslayout :: html(name='Keycloak Demo', headcontent=~{:: headcontent}, navigation=~{:: navigation}, bodycontent=~{:: bodycontent})}">
+
 <head>
   <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+  <th:block th:fragment="headcontent">
 
-  <link href="../static/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"
-        th:href="@{node_modules/bootstrap/dist/css/bootstrap.min.css}">
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+
+    <link href="../static/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"
+          th:href="@{node_modules/bootstrap/dist/css/bootstrap.min.css}">
+
+  </th:block>
   <title>Base Template</title>
 </head>
 
 <body>
 <header>
-  <ul layout:fragment="navigation">
-    <li>
-      <a th:href="@{/}">
-        Startseite
-      </a>
-    </li>
-  </ul>
+  <nav class="navigation navigation-secondary" is="mops-navigation" th:fragment="navigation">
+    <ul>
+      <li>
+        <a th:href="@{/}">
+          Startseite
+        </a>
+      </li>
+      <li>
+        <a th:href="@{/orga}">
+          Orgaseite
+        </a>
+      </li>
+      <li>
+        <a th:href="@{/studi}">
+          Studiseite
+        </a>
+      </li>
+      <li>
+        <a th:href="@{/personal}">
+          Persönliche Ansicht
+        </a>
+      </li>
+    </ul>
+  </nav>
 </header>
+
+<main th:fragment="bodycontent">
+  <div th:replace="${content} ?: ~{}"></div>
+</main>
 
 </body>
 </html>
