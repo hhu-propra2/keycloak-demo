@@ -56,11 +56,24 @@ class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
+        forceHTTPS(http);
         http.authorizeRequests()
                 .antMatchers("/actuator/**")
                 .hasRole("monitoring")
                 .anyRequest()
                 .permitAll();
+    }
+
+    /**
+     * Redirect all Requests to SSL if header in proxy are set.
+     *
+     * @param http
+     * @throws Exception
+     */
+    private void forceHTTPS(HttpSecurity http) throws Exception {
+        http.requiresChannel()
+                .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+                .requiresSecure();
     }
 
     /**
