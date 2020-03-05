@@ -23,15 +23,12 @@ public class AuthdemoController {
         publicAccess = registry.counter("access.public");
     }
 
-
     /**
      * Nimmt das Authentifizierungstoken von Keycloak und erzeugt ein AccountDTO für die Views.
      *
      * @param token
      * @return neuen Account der im Template verwendet wird
      */
-
-
     private Account createAccountFromPrincipal(KeycloakAuthenticationToken token) {
         KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
         return new Account(

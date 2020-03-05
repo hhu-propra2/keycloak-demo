@@ -29,6 +29,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'mops:styleguide:2.1.0'
+
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -38,7 +40,6 @@ dependencies {
     implementation 'org.keycloak.bom:keycloak-adapter-bom:3.3.0.Final'
     implementation group: 'com.github.javafaker', name: 'javafaker', version: '1.0.1'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.4.1'
-    implementation 'mops:styleguide:2.0.0'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
