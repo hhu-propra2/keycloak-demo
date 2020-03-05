@@ -1,6 +1,7 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{mopslayout :: html(name='Keycloak Demo', headcontent=~{:: headcontent}, navigation=~{:: navigation}, bodycontent=~{:: bodycontent})}">
+<html lang="en"
+      th:replace="~{mopslayout :: html(name='Keycloak Demo', headcontent=~{:: headcontent}, navigation=~{:: navigation}, bodycontent=~{:: bodycontent})}"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <!-- Required meta tags -->
@@ -38,6 +39,11 @@
       <li>
         <a th:href="@{/personal}">
           Persönliche Ansicht
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/hhu-propra2/keycloak-demo">
+          <i class="icono-sitemap mr-2"></i> Keycloak-Demo Repo
         </a>
       </li>
     </ul>
