@@ -39,6 +39,7 @@ public class AuthdemoController {
     }
 
     @GetMapping("/")
+    @Secured("ROLE_demoapp")
     public String index(KeycloakAuthenticationToken token, Model model) {
         if (token != null) {
             model.addAttribute("account", createAccountFromPrincipal(token));
