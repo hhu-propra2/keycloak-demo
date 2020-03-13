@@ -175,6 +175,8 @@ public String orga(KeycloakAuthenticationToken token, Model model) {
     KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
     model.addAttribute("username", principal.getName());
     model.addAttribute("email", principal.getKeycloakSecurityContext().getIdToken().getEmail());
+
+...
 ----
 
 
