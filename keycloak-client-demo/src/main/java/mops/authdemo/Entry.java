@@ -2,7 +2,6 @@ package mops.authdemo;
 
 import com.github.javafaker.Faker;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
