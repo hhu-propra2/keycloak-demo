@@ -19,16 +19,13 @@ Somit sind wir als Entwickler einer Spring Boot Anwendung für diesen nicht mehr
 
 Diese Demo nutzt den am Institut eingerichteten Keycloak-Service unter https://keycloak.cs.hhu.de .
 
-image::keycloak-demo/img/preview.png[persönliche Ansicht]
-
-Dieses Repository enthält sowohl die normale Demo, als auch eine zweite Spring Boot-Anwendung, welche als Client die REST-API der Keycloak Demo anspricht.
+image::img/preview.png[persönliche Ansicht]
 
 == Installation
 
 Es wird ein JDK 11 benötigt.
 
-Die Applikation kann einfach über den mitgelieferten Gradle Wrapper gestartet werden. Wechseln Sie hierzu zunächst in den `keycloak-demo` Ordner.
-Für die Client Applikation wechseln Sie in den `keycloak-demo-client` Ordner. Für die Client Demo muss die normale Demo ebenfalls laufen.
+Die Applikation kann einfach über den mitgelieferten Gradle Wrapper gestartet werden:
 
     ./gradlew bootRun
 
@@ -43,8 +40,6 @@ Die verfügbaren Routen sind:
 * `/actuator` Zugangsbeschränkte Route für Monitoring Informationen
 * `/studi` Zugangsbeschränkte Ansicht für StudentInnen
 * `/personal` Zugangsbeschränkte Ansicht für alle oben erwähnten Rollen
-
-Die Client Demo läuft auf Port `8081` ist somit über http://localhost:8081 erreichbar wenn sie gestartet wurde.
 
 == Funktionsweise & Implementierung
 
@@ -175,71 +170,4 @@ public String orga(KeycloakAuthenticationToken token, Model model) {
     KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
     model.addAttribute("username", principal.getName());
     model.addAttribute("email", principal.getKeycloakSecurityContext().getIdToken().getEmail());
-
-...
-----
-
-
-== REST-API
-
-Die `application.properties` Datei ändert sich im Vergleich zum vorherigen Betrieb über den Client `demo` geringfügig.
-Übernehmen Sie die unten stehenden Zeilen und ändern Sie die Werte `your_client_id` und `your_client_secret`.
-[source]
-----
-keycloak.resource=your_client_id
-keycloak.credentials.secret=your_client_secret
-keycloak.verify-token-audience=true
-keycloak.use-resource-role-mappings=true
-
-keycloak.autodetect-bearer-only=true
-keycloak.confidential-port= 443
-----
-
-=== REST Controller
-
-Um eine Route in einem REST-Controller abzusichern nutzen Sie die Annotation `@Secured` mit dem Parameter `"ROLE_api_user"`.
-Clients die mit Ihrer Applikation kommunizieren dürfen haben diese Rolle inne.
-
-=== REST call
-
-Um einen REST-call an eine mit `@Secured` gesicherte Route durchzuführen, können Sie sich ein entsprechendes `RestTemplate` injecten lassen.
-
-[source,java]
-----
-@Autowired
-RestTemplate serviceAccountRestTemplate;
-
-@GetMapping("/")
-@Secured({"ROLE_studentin","ROLE_orga"})
-public String index(KeycloakAuthenticationToken token,Model model) {
-
-    /**
-     * THIS IS JUST AN EXAMPLE! DO NOT QUERY A SERVICE IN THE REQUEST/RESPONSE CYCLE!
-     */
-    var res = Arrays.asList(serviceAccountRestTemplate.getForEntity("http://localhost:8080/api/text", Entry[].class).getBody());
-
-----
-
-Damit dies funktioniert muss eine `@Bean` annotierte Methode mit dem Namen `serviceAccountRestTemplate` in einer Konfigurationsklasse enthalten sein.
-Sie können diese Methode einfach aus der `KeycloakConfig` Klasse des `keycloak-client-demo` Projektes entnehmen.
-
-
-[source,java]
-----
-@Value("${keycloak.resource}")
-private String clientId;
-@Value("${keycloak.credentials.secret}")
-private String clientSecret;
-@Value("${hhu_keycloak.token-uri}")
-private String tokenUri;
-
-@Bean public RestTemplate serviceAccountRestTemplate(){
-    ClientCredentialsResourceDetails resourceDetails = new ClientCredentialsResourceDetails();
-    resourceDetails.setGrantType(OAuth2Constants.CLIENT_CREDENTIALS);
-    resourceDetails.setAccessTokenUri(tokenUri);
-    resourceDetails.setClientId(clientId);
-    resourceDetails.setClientSecret(clientSecret);
-
-    return new OAuth2RestTemplate(resourceDetails);
-}
 ----

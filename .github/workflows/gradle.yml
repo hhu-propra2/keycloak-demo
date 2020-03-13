@@ -10,7 +10,7 @@ jobs:
 
       - uses: actions/cache@v1
         with:
-          path: ~/.gradle/caches
+          path: keycloak-demo/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
@@ -20,4 +20,4 @@ jobs:
           java-version: 13
 
       - name: Run Gradle Checks
-        run: ./gradlew check
+        run: keycloak-demo/gradlew -p keycloak-demo check

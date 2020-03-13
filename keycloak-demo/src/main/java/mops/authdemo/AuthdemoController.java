@@ -67,7 +67,7 @@ public class AuthdemoController {
 
 
     @GetMapping("/personal")
-    @RolesAllowed({"ROLE_orga", "ROLE_studentin"})
+    @Secured({"ROLE_studentin","ROLE_orga"})
     public String personal(KeycloakAuthenticationToken token, Model model) {
         model.addAttribute("account", createAccountFromPrincipal(token));
         authenticatedAccess.increment();
