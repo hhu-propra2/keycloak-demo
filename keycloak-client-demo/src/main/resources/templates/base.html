@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"
+      th:replace="~{mopslayout :: html(name='Keycloak Demo', headcontent=~{:: headcontent}, navigation=~{:: navigation}, bodycontent=~{:: bodycontent})}"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <!-- Required meta tags -->
+  <th:block th:fragment="headcontent">
+
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+
+    <link href="../static/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"
+          th:href="@{node_modules/bootstrap/dist/css/bootstrap.min.css}">
+
+  </th:block>
+  <title>Base Template</title>
+</head>
+
+<body>
+<header>
+  <nav class="navigation navigation-secondary" is="mops-navigation" th:fragment="navigation">
+    <ul>
+      <li>
+        <a th:href="@{/}">
+          Startseite
+        </a>
+      </li>
+      <li>
+        <a th:href="@{/id}">
+          Query with ID
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/hhu-propra2/keycloak-demo">
+          <i class="icono-sitemap mr-2"></i> Keycloak-Demo Repo
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<main th:fragment="bodycontent">
+  <div th:replace="${content} ?: ~{}"></div>
+</main>
+
+</body>
+</html>

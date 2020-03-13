@@ -1,0 +1,173 @@
+= Spring Boot: Keycloak Demo
+:experimental:
+:icons: font
+:icon-set: octicon
+:source-highlighter: rouge
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+Diese Spring Boot Anwendung ist eine Demo, welche die Anbindung an link:https://www.keycloak.org/[Keycloak] zeigt.
+
+Es wird Spring Security benutzt um einzelne Routen nur für Nutzer gewisser Rollen zu erlauben.
+Keycloak ist ein Service, welcher die Delegation des Anmeldeprozess ermöglicht.
+Somit sind wir als Entwickler einer Spring Boot Anwendung für diesen nicht mehr verantwortlich.
+
+Diese Demo nutzt den am Institut eingerichteten Keycloak-Service unter https://keycloak.cs.hhu.de .
+
+image::img/preview.png[persönliche Ansicht]
+
+== Installation
+
+Es wird ein JDK 11 benötigt.
+
+Die Applikation kann einfach über den mitgelieferten Gradle Wrapper gestartet werden:
+
+    ./gradlew bootRun
+
+== Nutzung
+
+Öffnen Sie die nicht zugangsbeschränkte Startseite http://localhost:8080. Von hier aus können Sie die verschiedenen Routen anklicken.
+Sie müssen sich anschließend über Keycloak einloggen um Zugang zu erhalten.
+
+Die verfügbaren Routen sind:
+
+* `/orga` Zugangsbeschränkte Ansicht für OrganisatorInnen
+* `/actuator` Zugangsbeschränkte Route für Monitoring Informationen
+* `/studi` Zugangsbeschränkte Ansicht für StudentInnen
+* `/personal` Zugangsbeschränkte Ansicht für alle oben erwähnten Rollen
+
+== Funktionsweise & Implementierung
+
+Um mit Spring Security Routen vor unberechtigtem Zugang zu schützen und eine Rollenbasierte Freigabe einzurichten müssen wir wie bereits in Übung 14 angesprochen eine Konfigurations-Klasse anlegen.
+
+In dieser Demo ist dies die `SecurityConfig` Klasse.
+
+=== Keycloak Konfiguration
+
+Anders als in Übung 14 erbt diese `SecurityConfig` Klasse nun jedoch von `KeycloakWebSecurityConfigurerAdapter`.
+
+Die Konfiguration des Keycloak Adapters regeln wir über die `application.properties`-Datei.
+Hier legen wir beispielsweise fest welchen Keycloak-Server wir auswählen, auf welchem sogenannten `Realm` wir arbeiten, etc.
+
+----
+keycloak.auth-server-url=https://keycloak.cs.hhu.de/auth
+keycloak.realm=MOPS
+...
+----
+
+Damit Spring-Boot diese Konfiguration auch findet, müssen wir eine weitere `@Bean`-annotierte Methode deklarieren um Spring einen `KeycloakSpringBootConfigResolver` zur Verfügung zu stellen.
+
+WARNING: Aufgrund eines Bugs in dem Keycloak Adapter können wir diese Methode leider nicht in der `SecurityConfig` Klasse deklarieren.
+
+TIP: Erstellen Sie eine seperate Klasse, welche mit `org.springframework.context.annotation.Configuration` annotiert ist und deklarieren Sie die Bean-Methode dort.
+In der Demo wird dies in der `KeycloakConfig` umgesetzt.
+
+[source,java]
+----
+@Configuration
+public class KeycloakConfig {
+    @Bean
+    public KeycloakSpringBootConfigResolver KeycloakConfigResolver() {
+        return new KeycloakSpringBootConfigResolver();
+    }
+}
+----
+
+IMPORTANT: Sollten Sie einen Fehler erhalten, in welcher von Spring Boot keine `keycloak.json`-Datei finden kann, dann wird nicht die `application.properties`-Datei zur Konfiguration des Keycloak-Adapters verwendet.
+Überprüfen Sie die Deklaration der Bean.
+
+Um in Spring Security mit Keycloak Access-Token per `@Autowire` injecten zu können, kann eine weitere `@Bean`-annotierte Methode in der `SecurityConfig` Klasse deklariert werden.
+
+TIP: Sehen Sie sich hierzu die `@Bean`-annotierte Methode `getAccessToken` an.
+
+=== Rollenbasierter Zugang
+
+Um Rollenbasierten Zugang mit Spring Security umzusetzen, bieten sich zwei Möglichkeiten an.
+
+==== Routenangabe über Antmatcher
+
+Die in der Übung bereits kennengelernte Möglichkeit funktioniert über das Nutzen von Antmatchern in der SecurityConfig Klasse.
+
+Hier können wir Pattern angeben, für welche Authorisierung und mit welchen Rollen und weiteren Einschränkungen notwendig ist.
+
+Hier ein Beispiel, wie es auch in der Demo verwendet wird:
+
+[source,java]
+----
+http.authorizeRequests()
+                .antMatchers("/some_explicit_route*")
+                .hasRole("orga")
+                .anyRequest()
+                .permitAll();
+----
+
+==== Rollenbasierte Freigabe mit Annotationen
+
+Alternativ können wir auch direkt an eine Methode eines Controllers eine Annotation schreiben.
+Mit dieser Annotation ist es dann möglich die berechtigten Rollen für die mit der Methode verbundenen Routen anzugeben.
+
+[source,java]
+----
+@GetMapping("/orga")
+@Secured("ROLE_orga")
+public String myControllerMethod
+----
+
+Dieses Verhalten ist in Spring-Boot nicht per Default aktiv.
+Um Spring Boot so zu konfigurieren, dass Annotationen an Methoden zur Rollenbasierten Zugangs/Freigabekontrolle funktionieren, muss eine Konfigurationsklasse erstellt werden.
+
+Diese können wir aber auch als innere statische Klasse in der `SecurityConfig`-Klasse deklarieren.
+So ist es auch in dieser Demo umgesetzt.
+
+[source,java]
+----
+    @Configuration
+    @EnableGlobalMethodSecurity(
+            prePostEnabled = true,
+            securedEnabled = true,
+            jsr250Enabled = true)
+    public static class MethodSecurityConfig
+            extends GlobalMethodSecurityConfiguration {
+    }
+----
+
+Durch die angegeben Optionen werden mehrere Annotationen zur Zugangskontrolle freigeschaltet.
+Unmittelbar relevant sind die Annotationen `@Secured`(Spring-spezifisch) und `@RolesAllowed` (Java-Standard).
+Beide erlauben rollenbasierte Freigabe direkt an Methoden zu deklarieren.
+Einen Unterschied in der Funktionalität gibt es nicht.
+Die Demo nutzt beides.
+
+[source,java]
+----
+@GetMapping("/personal")
+@RolesAllowed({"ROLE_orga", "ROLE_studentin"})
+public String personal
+----
+
+IMPORTANT: Spring benötigt für alle Rollen den Präfix `ROLE_`.
+Um z.B. die Rolle `foo` zu matchen, muss in der Annotation der String `"ROLE_foo"` angegeben werden.
+
+=== User Informationen
+
+Um in einer Methode des Controllers an die Nutzerdaten zu gelangen lässt sich ein sogenannter Principal über Spring in die Methode injecten.
+Mit Principal ist der momentan eingeloggte Nutzer gemeint.
+Da wir jedoch ganz konkret Keycloak verwenden, können wir uns auch gleich den `KeycloakAuthenticationToken` in der Methode übergeben lassen.
+
+Aus dieser können wir uns auch den `KeycloakPrincipal` holen.
+Diese Klasse hat mehr (Keycloak-spezifische) Informationen als der Standard Spring-Security Principal zur Verfügung.
+So können wir auch zum Beispiel die Email-Adresse des über Keycloak eingeloggten Nutzers verwenden
+
+[source,java]
+----
+@GetMapping("/orga")
+@RolesAllowed("ROLE_orgs")
+public String orga(KeycloakAuthenticationToken token, Model model) {
+    KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
+    model.addAttribute("username", principal.getName());
+    model.addAttribute("email", principal.getKeycloakSecurityContext().getIdToken().getEmail());
+----
