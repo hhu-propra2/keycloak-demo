@@ -21,14 +21,14 @@ Diese Demo nutzt den am Institut eingerichteten Keycloak-Service unter https://k
 
 image::keycloak-demo/img/preview.png[persönliche Ansicht]
 
-Dieses Repository enthält sowohl die normale Demo, als auch eine zweite Spring Boot-Anwendung, welche als Client die REST-API der Keycloak Demo anspricht.
+Dieses Repository enthält ausschließlich die normale Demo.
+Eine zweite Spring Boot-Anwendung, welche als Client die REST-API der Keycloak Demo anspricht ist unter https://github.com/hhu-propra2/keycloak-api-demo zu finden.
 
 == Installation
 
 Es wird ein JDK 11 benötigt.
 
-Die Applikation kann einfach über den mitgelieferten Gradle Wrapper gestartet werden. Wechseln Sie hierzu zunächst in den `keycloak-demo` Ordner.
-Für die Client Applikation wechseln Sie in den `keycloak-demo-client` Ordner. Für die Client Demo muss die normale Demo ebenfalls laufen.
+Die Applikation kann einfach über den mitgelieferten Gradle Wrapper gestartet werden. Für die Client Demo muss diese Demo ebenfalls gestartet werden.
 
     ./gradlew bootRun
 
@@ -43,8 +43,6 @@ Die verfügbaren Routen sind:
 * `/actuator` Zugangsbeschränkte Route für Monitoring Informationen
 * `/studi` Zugangsbeschränkte Ansicht für StudentInnen
 * `/personal` Zugangsbeschränkte Ansicht für alle oben erwähnten Rollen
-
-Die Client Demo läuft auf Port `8081` ist somit über http://localhost:8081 erreichbar wenn sie gestartet wurde.
 
 == Funktionsweise & Implementierung
 
@@ -200,7 +198,18 @@ keycloak.confidential-port= 443
 Um eine Route in einem REST-Controller abzusichern nutzen Sie die Annotation `@Secured` mit dem Parameter `"ROLE_api_user"`.
 Clients die mit Ihrer Applikation kommunizieren dürfen haben diese Rolle inne.
 
+[source,java]
+----
+@GetMapping("text")
+@Secured("ROLE_keycloak_demo_api_user")
+public List<Entry> generateText(KeycloakAuthenticationToken token) {
+
+...
+----
+
 === REST call
+
+IMPORTANT: Ein Beispiel mit Code hierzu finden sie in dem seperaten Projekt https://github.com/hhu-propra2/keycloak-api-demo
 
 Um einen REST-call an eine mit `@Secured` gesicherte Route durchzuführen, können Sie sich ein entsprechendes `RestTemplate` injecten lassen.
 
