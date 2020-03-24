@@ -19,7 +19,7 @@ Somit sind wir als Entwickler einer Spring Boot Anwendung für diesen nicht mehr
 
 Diese Demo nutzt den am Institut eingerichteten Keycloak-Service unter https://keycloak.cs.hhu.de .
 
-image::keycloak-demo/img/preview.png[persönliche Ansicht]
+image::img/preview.png[persönliche Ansicht]
 
 Dieses Repository enthält ausschließlich die normale Demo.
 Eine zweite Spring Boot-Anwendung, welche als Client die REST-API der Keycloak Demo anspricht ist unter https://github.com/hhu-propra2/keycloak-api-demo zu finden.
